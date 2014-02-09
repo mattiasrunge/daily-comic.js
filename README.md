@@ -8,27 +8,27 @@ A small node.js module which makes it easy to subscribe to daily comic strips. D
 ```javascript
 
 var DailyComic = require("daily-comic.js");
+
 var comic = new DailyComic({
     updateInterval: 3600 * 6,
     subscriptions: [ "xkcd", "dilbert" ]
 });
 
-daily.on("error", function(error) {
+comic.on("error", function(error) {
     console.log("error", error);
 });
 
-daily.on("new", function(comic, data) {
+comic.on("new", function(comic, data) {
    console.log("new", comic, data);
 });
 
-console.log("current xkcd", daily.get("xkcd"));
-console.log("current dilbert", daily.get("dilbert"));
+setTimeout(function() {
+    console.log("current xkcd", comic.get("xkcd"));
+    console.log("current dilbert", comic.get("dilbert"));
+}, 5000);
 
 ```
 
 ## Awesome comics
-* [XKCD](http://xkcd.com/)
-* [XKCD RSS](http://xkcd.com/rss.xml)
-
-* [Dilbert](http://www.dilbert.com/)
-* [Dilbert RSS](http://rss.latunyi.com/dilbert.rss)
+* [XKCD](http://xkcd.com/) [rss](http://xkcd.com/rss.xml)
+* [Dilbert](http://www.dilbert.com/) [rss](http://rss.latunyi.com/dilbert.rss)

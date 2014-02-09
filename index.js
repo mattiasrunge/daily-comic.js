@@ -5,7 +5,7 @@ var request = require("request");
 var util = require("util");
 var events = require("events");
 
-module.export = function(options) {
+module.exports = function(options) {
     events.EventEmitter.call(this);
     
     var comics = require("./comics.json");
@@ -102,4 +102,4 @@ module.export = function(options) {
     this._checkSubscriptions();
 }
 
-util.inherits(module.export, events.EventEmitter);
+util.inherits(module.exports, events.EventEmitter);
