@@ -25,36 +25,40 @@ module.exports = function(options) {
     this._getList = function(url) {
         var deferred = Q.defer();
         var items = [];
-        
-        request(url)
-        .pipe(new FeedParser())
-        .on("error", function(error) {
-            deferred.reject(error);
-        })
-        .on("readable", function() {
-            var item;
-            
-            while (item = this.read()) {
-                item.summary = item.summary.replace(/\'/g, "'");
-                var urlGroup = item.summary.match(/<img.*?src="(.*?)"/);
-                var altGroup = item.summary.match(/<img.*?alt="(.*?)"/);
-                
-                // Only add if we could parse an url
-                if (urlGroup.length > 1) {
-                    items.push({
-                        date: new Date(item.date),
-                        title: item.title,
-                        url: urlGroup[1],
-                        text: altGroup && altGroup.length > 1 ? altGroup[1] : "",
-                        link: item.link
-                    });
+
+        try {
+            request(url, { proxy: process.env.http_proxy })
+            .pipe(new FeedParser())
+            .on("error", function(error) {
+                deferred.reject(error);
+            })
+            .on("readable", function() {
+                var item;
+
+                while (item = this.read()) {
+                    item.summary = item.summary.replace(/\'/g, "'");
+                    var urlGroup = item.summary.match(/<img.*?src="(.*?)"/);
+                    var altGroup = item.summary.match(/<img.*?alt="(.*?)"/);
+                    
+                    // Only add if we could parse an url
+                    if (urlGroup.length > 1) {
+                        items.push({
+                            date: new Date(item.date),
+                            title: item.title,
+                            url: urlGroup[1],
+                            text: altGroup && altGroup.length > 1 ? altGroup[1] : "",
+                            link: item.link
+                        });
+                    }
                 }
-            }
-        })
-        .on("end", function() {
-            deferred.resolve(items);
-        });
-        
+            })
+            .on("end", function() {
+                deferred.resolve(items);
+            });
+        } catch (e) {
+            deferred.reject(e);
+        }
+
         return deferred.promise;
     };
     
@@ -77,7 +81,7 @@ module.exports = function(options) {
             list.sort(function(a, b) {
                 return b.date - a.date;
             });
-            
+
             if (list.length > 0) {
                 if (!latest[comic] || list[0].date - latest[comic].date !== 0) {
                     latest[comic] = list[0];
