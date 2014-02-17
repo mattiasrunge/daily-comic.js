@@ -36,19 +36,23 @@ module.exports = function(options) {
                 var item;
 
                 while (item = this.read()) {
-                    item.summary = item.summary.replace(/\'/g, "'");
-                    var urlGroup = item.summary.match(/<img.*?src="(.*?)"/);
-                    var altGroup = item.summary.match(/<img.*?alt="(.*?)"/);
-                    
-                    // Only add if we could parse an url
-                    if (urlGroup.length > 1) {
-                        items.push({
-                            date: new Date(item.date),
-                            title: item.title,
-                            url: urlGroup[1],
-                            text: altGroup && altGroup.length > 1 ? altGroup[1] : "",
-                            link: item.link
-                        });
+                    try {
+                        item.summary = item.summary.replace(/\'/g, "'");
+                        var urlGroup = item.summary.match(/<img.*?src="(.*?)"/);
+                        var altGroup = item.summary.match(/<img.*?alt="(.*?)"/);
+
+                        // Only add if we could parse an url
+                        if (urlGroup.length > 1) {
+                            items.push({
+                                date: new Date(item.date),
+                                title: item.title,
+                                url: urlGroup[1],
+                                text: altGroup && altGroup.length > 1 ? altGroup[1] : "",
+                                link: item.link
+                            });
+                        }
+                    } catch (e) {
+                        // Just ignore bad data
                     }
                 }
             })
