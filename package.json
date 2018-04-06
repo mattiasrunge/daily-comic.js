@@ -1,8 +1,8 @@
 {
   "name": "daily-comic.js",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A small node.js module which makes it easy to subscribe to daily comic strips. Default support for Dilbert and XKCD.",
-  "author": "Mattias Runge <mattias@runge.se>",
+  "author": "Mattias Runge-Broberg <mattias@runge.se>",
   "repository": { "type": "git", "url": "git://github.com/mattiasrunge/daily-comic.js.git" },
   "dependencies": {
     "feedparser": ">= 0.16.5",
